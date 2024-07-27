@@ -1,0 +1,42 @@
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: spark-job-1
+  namespace: spark
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: spark-job-1
+  namespace: spark
+spec:
+  type: Python
+  pythonVersion: "3"
+  mode: cluster
+  image: seunghyejeong/spark_v2:0.1
+  imagePullPolicy: Always
+  mainApplicationFile: local:///opt/bitnami/spark/messaging.py
+  sparkVersion: "3.5.1"
+  volumes:
+    - name: spark-share-data
+      persistentVolumeClaim:
+        claimName: spark-shared-data
+  sparkConf:
+    spark.conf.dir: "/opt/bitnami/spark/conf"
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"
+    serviceAccount: spark
+    env:
+      - name: SPARK_CONF_DIR
+        value: /opt/bitnami/spark/conf
+    volumeMounts:
+      - name: spark-share-data
+        mountPath: /result-data
+  executor:
+    cores: 1
+    instances: 1
+    memory: "512m"
+    volumeMounts:
+      - name: spark-share-data
+        mountPath: /result-data

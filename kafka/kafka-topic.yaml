@@ -1,0 +1,14 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: bami-topic
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: "bami"
+spec:
+  replicas: 1
+  partitions: 1
+  config:
+    retention.ms: 7200000
+    segment.bytes: 1073741824
+    min.insync.replicas: 2

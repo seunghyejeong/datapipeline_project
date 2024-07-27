@@ -1,0 +1,96 @@
+images:
+  airflow:
+    repository: seunghyejeong/airflow_v2
+    tag: "1.0"
+    digest: ~
+    pullPolicy: IfNotPresent
+
+# Load Examples
+extraEnv: |
+  - name: AIRFLOW__CORE__LOAD_EXAMPLES
+    value: 'False'
+  - name: AIRFLOW__CORE__DEFAULT_TIMEZONE
+    value: 'Asia/Seoul'
+
+#set executor
+executor: "KubernetesExecutor"
+
+volumeMounts:
+  - name: kafka-volume
+    mountPath: /opt/airflow/kafka
+  - name: spark-volume
+    mountPath: /opt/airflow/spark
+volumes:
+  - name: kafka-volume
+    persistentVolumeClaim:
+      claimName: kafka-local-pvc
+  - name: spark-volume
+    persistentVolumeClaim:
+      claimName: spark-local-pvc
+
+# Webserver configure
+webserver:
+  defaultUser:
+    enabled: true
+    role: Admin
+    username: admin
+    email: admin@example.com
+    firstName: admin
+    lastName: admin
+    password: admin
+  service:
+    type: NodePort
+    ports:
+      - name: airflow-ui
+        port: 8080
+        targetPort: 8080
+        nodePort: 31151
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
+  extraVolumeMounts:
+    - name: airflow-dags
+      mountPath: /opt/airflow/dags
+    - name: kubeconfig-volume
+      mountPath: /opt/airflow/.kube/kubeconfig
+      readOnly: true
+  extraVolumes:
+    - name: airflow-dags
+      persistentVolumeClaim:
+        claimName: airflow-dags
+    - name: kubeconfig-volume
+      secret:
+        secretName: kubeconfig-secret
+
+workers:
+  replicas: 1
+  nodeSelector:
+    node-role.kubernetes.io/control-plane: ""
+
+webserverSecretKey: a717f95983a54fb8a822c40ba806cfc8
+
+# bind w strogaeClass
+dags:
+  persistence:
+    enabled: true
+    storageClassName: cp-storageclass
+    accessMode: ReadWriteMany
+    size: 5Gi
+workers:
+  persistence:
+    enabled: true
+    storageClassName: cp-storageclass
+    size: 5Gi
+logs:
+  persistence:
+    enabled: true
+    storageClassName: cp-storageclass
+triggerer:
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: cp-storageclass
+redis:
+  persistence:
+    enabled: true
+    size: 5Gi
+    storageClassName: cp-storageclass
