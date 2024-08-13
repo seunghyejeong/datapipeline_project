@@ -5,7 +5,7 @@ Airflow와 Spark, Kafka를 활용한 데이터 파이프라인 입니다. Airflo
 > Kubernetes 클러스터로 구성 되어 있으며, 모두 Pod로 실행 됩니다. 
 
 
-![architecture](../../../../Project%20List/Attached%20file/Pasted%20image%2020240813185429.png)
+![architecture](./Pasted%20image%2020240813185429.png)
 # Basic Usage
 
 ### 1. Cluster
