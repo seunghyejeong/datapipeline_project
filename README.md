@@ -47,7 +47,7 @@ vi requirements.txt
 > - kafka-spark-PV.yaml
 > - stroageclass.yaml
 ##### 4) custom_values 적용하기
-> custom_values.yaml
+> - custom_values.yaml
 
 ### 4. Spark 구성하기
 Spark를 Kubernetes에서 사용하기 위해 SparkOperator를 사용하여 데이터 처리를 Job으로 수행하는 환경을 구성한다.
@@ -65,9 +65,9 @@ vi messaging.py
 ```
 
 > 해당 부분은 자신이 구성한 클러스터에 맞게 변경 한다.
-> bootstrap_servers = ''
-> topic_name = ''
-> spark_master_url = ''
+> - bootstrap_servers = ''
+> - topic_name = ''
+> - spark_master_url = ''
 
 #### Spark Custom Image 생성
 ```bash
@@ -148,10 +148,10 @@ vi dags.py
 ## 실행 하기
 ##### Airflow UI에 접속한다.
 - 주소: {MASTER_NODE_IP}:{AIRFLOW_WEB_SERVER_SVC_PORT}
-- id 및 password: admin/admin![[Pasted image 20240419134526.png]]
+- id 및 password: admin/admin
 ##### Dag을 실행 한다.
-1. 생성 된 dag을 클릭한 후 ▶️버튼을 클릭 한다. ![[Pasted image 20240419134656.png]]
-3. 실행중인 dag의 로그를 보기 위해서는 아래 화면의 Dag 실행 중인 task를 클릭해 로그를 볼 수 있다.![[Pasted image 20240419135312.png]]
+1. 생성 된 dag을 클릭한 후 ▶️버튼을 클릭 한다.
+3. 실행중인 dag의 로그를 보기 위해서는 UI의 Dag 실행 중인 task를 클릭해 로그를 볼 수 있다.
 ##### .json으로 변환된 결과 파일은 Spark Master, Worker 컨테이너에 접속해 `/result-data` 에서 확인 할 수 있다.
 
 
