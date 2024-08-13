@@ -2,8 +2,10 @@
 Airflow와 Spark, Kafka를 활용한 데이터 파이프라인 입니다. Airflow에서 Kafka, Spark 배포 및 동작을 실행하고 가공된 데이터는 `.json` 파일로 변환 되어 Object Storage로 전달 됩니다.
 
 # Architecture
-> Kubernetes 클러스터로 구성 되어 있으며, 모두 Pod로 실행 됩니다. ![[Pasted image 20240813185429.png]]
+> Kubernetes 클러스터로 구성 되어 있으며, 모두 Pod로 실행 됩니다. 
 
+
+![architecture](../../../../Project%20List/Attached%20file/Pasted%20image%2020240813185429.png)
 # Basic Usage
 
 ### 1. Cluster
