@@ -22,7 +22,7 @@ tar xvf airflow-1.13.1.tgz
 mv airflow-1.13.1.tgz airflow
 ```
 
-- airflow 폴더에 Dag 파일을 저장할 디렉토리를 만든다.
+1) airflow 폴더에 Dag 파일을 저장할 디렉토리를 만든다.
 ```bash
 cd airflow && mkdir dags
 ```
@@ -33,41 +33,41 @@ vi Dockerfile
 vi requirements.txt
 ```
 
-- Docker Repository upload
-#### Airflow Custom Values 생성 하기
-
-*진행 시나리오*
-- Local에서 작업한 Resource를 Conateinr 안에서도 동일하게 작업 할 수 있도록 Volume Mount를 해준다.
-	*참고: airflow의 dags 파일은 이미 다른 컨테이너와 공유 되고 있기 때문에 Local과 연결 하지 않았다.*
--  `kubeconfig-secret`과`{WEB_SERVER_SECRET_KEY}`은 아래의 절차를 따라 진행 후 입력 한다.
-
-##### 1) kubeconfig-secret
-##### 2) Webserver Secret
-##### 3) Volume 생성 (StorageClass, PV/PVC)
-> - kafka-spark-PV.yaml
-> - stroageclass.yaml
-##### 4) custom_values 적용하기
-> - custom_values.yaml
+2) Docker Repository 업로드 한다.
+3) Airflow Custom Values 생성 하기
+	*진행 시나리오*
+	- Local에서 작업한 Resource를 Conateinr 안에서도 동일하게 작업 할 수 있도록 Volume Mount를 해준다.
+		*참고: airflow의 dags 파일은 이미 다른 컨테이너와 공유 되고 있기 때문에 Local과 연결 하지 않았다.*
+	-  `kubeconfig-secret`과`{WEB_SERVER_SECRET_KEY}`은 아래의 절차를 따라 진행 후 입력 한다.
+>		1) Kubernetes secret를 생성한다.
+> 			- airflow-secret.yaml
+>		2) Webserver Secret
+>		3) Volume 생성 (StorageClass, PV/PVC)
+> 			- kafka-spark-PV.yaml
+> 			- stroageclass.yaml
+>		4) custom_values 적용하기
+> 			- custom_values.yaml
 
 ### 4. Spark 구성하기
 Spark를 Kubernetes에서 사용하기 위해 SparkOperator를 사용하여 데이터 처리를 Job으로 수행하는 환경을 구성한다.
 
-1. 작업 디렉토리를 만든다
+1) 작업 디렉토리를 만든다.
 ```bash
 cd ~/airflow
 mkdir spark
 ```
 
-- Streaming이 완료 되면 쌓이는 결과 값을 nhn의 Object Stroage에 업로드 한다.
+2) Streaming을 수행 할 Python 코드를 작성 한다. 
+	Streaming이 완료 되면 쌓이는 결과 값을 nhn의 Object Stroage에 업로드 한다.
 ```bash
 cd ~/airflow/spark
 vi messaging.py
 ```
 
 > 해당 부분은 자신이 구성한 클러스터에 맞게 변경 한다.
-> - bootstrap_servers = ''
-> - topic_name = ''
-> - spark_master_url = ''
+> 	- bootstrap_servers = ''
+> 	- topic_name = ''
+> 	- spark_master_url = ''
 
 #### Spark Custom Image 생성
 ```bash
@@ -80,9 +80,11 @@ vi sparkjob.yaml
 ```
 
 #### Spark PVC 생성
+```bash
+vi pvc.yaml
+```
 
 ### 5. Kafka 구성하기 
-
 ```bash
 cd ~/airflow && mkdir kafka
 cd kafka
@@ -100,28 +102,29 @@ helm repo add strimzi https://strimzi.io/charts/
 helm upgrade --install strimzi-kafka strimzi/strimzi-kafka-operator -n kafka --create-namespace
 ```
 
-- Kafka의 produce, consume 등을 모니터링 하기 위한 Client를 배포 한다.
+1) Kafka의 produce, consume 등을 모니터링 하기 위한 Client를 배포 한다.
 ```bash
 vi kafka-client.yaml
 ```
 
-- produce 할 Topic을 생성한다.
+2) produce 할 Topic을 생성한다.
 ```bash
 vi kafka-topic.yaml
 ```
 
-- Kafka와 Zookeeper volume을 생성한다.
+3) Kafka와 Zookeeper volume을 생성한다.
 ```bash
 vi kafka-volume.yaml
 ```
 
-- Kafka를 생성한다.
+4) Kafka를 생성한다.
 ```bash
 vi kafka.yaml
 ```
 
 ### 6) ClusterRole & ClusterRolebinding 설정하기
-
+> - clusterrole.yaml
+> - airflow-clusterrole.yaml
 ### 7) Airflow 배포하기
 ```bash
 helm repo add apache-airflow https://airflow.apache.org
@@ -132,8 +135,7 @@ helm upgrade --install airflow apache-airflow/airflow --namespace airflow --crea
 helm repo add spark-operator https://kubeflow.github.io/spark-operator
 helm upgrade --install -n spark --create-namespace spark-operator spark-operator/spark-operator --set webhook.enable=true
 ```
-
-### Dag 파일 작성
+### 9) Dag 파일 작성
 1. Airflow의 webserver Container에 접속한다.
 ```bash
 kubectl exec -ti -n airflow {AIRFLOW_WEB_SERVER_POD} -- bash
