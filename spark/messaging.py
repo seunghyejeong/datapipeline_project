@@ -117,18 +117,18 @@ class ObjectService:
 
 def upload_files():
     # 토큰 발급 및 객체 저장 시작
-    AUTH_URL = 'https://api-identity-infrastructure.nhncloudservice.com/v2.0'
-    TENANT_ID = '9ea3a098cb8e49468ac2332533065184'
-    USERNAME = 'minkyu.lee'
-    PASSWORD = 'PaaS-TA@2024!'
+    AUTH_URL = 'https://api-identity-infrastructure.**cloud.com/v2.0'
+    TENANT_ID = '9ea3a098************2332533065184'
+    USERNAME = 'USERNAME'
+    PASSWORD = 'PASSWORD'
 
     token = get_token(AUTH_URL, TENANT_ID, USERNAME, PASSWORD)
     token_value = token["access"]["token"]["id"]
     print("get token successful")
 
-    STORAGE_URL = 'https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_9ea3a098cb8e49468ac2332533065184'
+    STORAGE_URL = 'https://kr1-api-object-storage.nhncloudservice.com/v1/AUTH_9ea3a098cb!@#$$%%%%%%%2332533065184'
     TOKEN_ID = token_value
-    CONTAINER_NAME = 'cp-object-storage'
+    CONTAINER_NAME = 'OBJECTSTORAGENAME'
 #    OBJECT_NAME = 'part-0000dd0-2f0f45cd-9194-48eb-ac34-0aac8f045288-c000.json'
     OBJECT_PATH = data_path
 
